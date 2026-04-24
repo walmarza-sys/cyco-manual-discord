@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual Discord — Cyco Records</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f10;
+    --surface: #18181c;
+    --surface2: #222228;
+    --border: #2e2e38;
+    --red: #e8192c;
+    --red-dim: #7a0e18;
+    --text: #e8e8ec;
+    --muted: #7f7f8f;
+    --green: #3ba55c;
+    --yellow: #faa61a;
+    --blue: #5865f2;
+    --channel: #96989d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 0 0 80px;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #1a0005 0%, #0f0f10 60%);
+    border-bottom: 1px solid var(--red-dim);
+    padding: 48px 40px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(232,25,44,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.1;
+  }
+  .header h1 span { color: var(--red); }
+  .header-sub {
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 15px;
+  }
+  .badge {
+    display: inline-block;
+    background: var(--red);
+    color: #fff;
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin-top: 16px;
+    letter-spacing: 1px;
+  }
+
+  /* INTRO */
+  .intro {
+    max-width: 820px;
+    margin: 36px auto 0;
+    padding: 0 32px;
+  }
+  .intro-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--blue);
+    border-radius: 8px;
+    padding: 20px 24px;
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .intro-box strong { color: var(--text); }
+
+  /* SECTION */
+  .sections {
+    max-width: 820px;
+    margin: 36px auto 0;
+    padding: 0 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .category {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .category-header {
+    padding: 16px 24px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .category-icon { font-size: 18px; }
+  .category-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text);
+    font-weight: 700;
+  }
+  .category-desc {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .channels { padding: 8px 0; }
+  .channel {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    align-items: start;
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--border);
+    gap: 16px;
+    transition: background 0.15s;
+  }
+  .channel:last-child { border-bottom: none; }
+  .channel:hover { background: rgba(255,255,255,0.02); }
+
+  .channel-name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--channel);
+    font-weight: 500;
+  }
+  .channel-name .hash {
+    color: var(--border);
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .channel-name .emoji { font-size: 14px; }
+  .channel-name .name { color: var(--text); }
+
+  .channel-info {}
+  .channel-who {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .channel-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .channel-example {
+    margin-top: 6px;
+    background: var(--bg);
+    border-left: 2px solid var(--border);
+    padding: 6px 10px;
+    font-size: 12px;
+    color: var(--muted);
+    border-radius: 0 4px 4px 0;
+    font-style: italic;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .tag-ro { background: rgba(250,166,26,0.15); color: var(--yellow); }
+  .tag-priv { background: rgba(88,101,242,0.15); color: var(--blue); }
+  .tag-forum { background: rgba(59,165,92,0.15); color: var(--green); }
+
+  /* REGLAS */
+  .rules {
+    max-width: 820px;
+    margin: 24px auto 0;
+    padding: 0 32px;
+  }
+  .rules-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--red);
+    border-radius: 12px;
+    padding: 24px 28px;
+  }
+  .rules-box h2 {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 16px;
+  }
+  .rules-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    list-style: none;
+  }
+  .rules-list li {
+    display: flex;
+    gap: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .rules-list li .num {
+    color: var(--red);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    min-width: 22px;
+    padding-top: 1px;
+  }
+
+  /* GUIA PEDIDO */
+  .guide {
+    max-width: 820px;
+    margin: 24px auto 0;
+    padding: 0 32px;
+  }
+  .guide-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--green);
+    border-radius: 12px;
+    padding: 24px 28px;
+  }
+  .guide-box h2 {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 20px;
+  }
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    counter-reset: step;
+  }
+  .step {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .step-num {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    flex-shrink: 0;
+  }
+  .step-content { padding-top: 4px; }
+  .step-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+  .step-detail {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .template-box {
+    margin-top: 20px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+  }
+  .template-box .template-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    font-family: 'Space Mono', monospace;
+  }
+  .template-box pre {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.8;
+    white-space: pre-wrap;
+  }
+
+  /* FOOTER */
+  .footer {
+    max-width: 820px;
+    margin: 36px auto 0;
+    padding: 0 32px;
+    text-align: center;
+  }
+  .footer p {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .footer strong { color: var(--red); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-tag">Cyco Records — Comunicaciones Internas</div>
+  <h1>Manual de uso<br><span>Discord</span></h1>
+  <p class="header-sub">Guía rápida para el equipo — cómo usamos el servidor</p>
+  <div class="badge">VERSIÓN 1.0 — ABR 2026</div>
+</div>
+
+<div class="intro">
+  <div class="intro-box">
+    <strong>¿Para qué usamos Discord?</strong> Discord reemplaza los grupos de WhatsApp y mensajes de Facebook que usábamos para coordinarnos. Cada canal tiene un propósito específico — así la info no se pierde y todo el equipo sabe dónde buscar qué.
+  </div>
+</div>
+
+<div class="sections">
+
+  <!-- GENERAL -->
+  <div class="category">
+    <div class="category-header">
+      <span class="category-icon">🌐</span>
+      <span class="category-name">General</span>
+      <span class="category-desc">Todo el equipo</span>
+    </div>
+    <div class="channels">
+
+      <div class="channel">
+        <div class="channel-name">
+          <span class="hash">#</span>
+          <span class="emoji">📢</span>
+          <span class="name">informaciones</span>
+          <span class="tag tag-ro">Solo lectura</span>
+        </div>
+        <div class="channel-info">
+          <div class="channel-who">¿Quién escribe? → Dirección / Admin</div>
+          <div class="channel-desc">Comunicados oficiales de la empresa. Avisos importantes, cambios de política, lanzamientos. Si aparece algo acá, es porque hay que leerlo.</div>
+        </div>
+      </div>
+
+      <div class="channel">
+        <div class="channel-name">
+          <span class="hash">#</span>
+          <span class="emoji">🎉</span>
+          <span class="name">celebraciones</span>
+        </div>
+        <div class="channel-info">
+          <div class="channel-who">¿Quién escribe? → Todo el equipo</div>
+          <div class="channel-desc">Cumpleaños, logros, buenas noticias. El canal buena onda del servidor.</div>
+          <div class="channel-example">Ej: "¡Feliz cumple @María! 🎂"</div>
+        </div>
+      </div>
+
+      <div class="channel">
+        <div class="channel-name">
+          <span class="hash">#</span>
+          <span class="emoji">💪</span>
+          <span class="name">apoyo-tiendas</span>
+        </div>
+        <div class="channel-info">
+          <div class="channel-who">¿Quién escribe? → Tiendas + supervisores</div>
+          <div class="channel-desc">Canal de soporte general para vendedores. Dudas del día a día, preguntas rápidas que no son urgencias IT ni pedidos de producción.</div>
+          <div class="channel-example">Ej: "¿A qué hora pasa logística hoy por waldos?"</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LOGÍSTICA -->
+  <div class="category">
+    <div class="category-header">
+      <span class="category-icon">🚚</span>
+      <span class="category-name">Logística</span>
+      <span class="category-desc">Equipo Logística + Tiendas</span>
+    </div>
+    <div class="channels">
+
+      <div class="channel">
+        <div class="channel-name">
+          <span class="hash">#</span>
+          <span class="emoji">💬</span>
+          <span class="name">restock</span>
+        </div>
+        <div class="channel-info">
+          <div class="channel-who">¿Quién escribe? → Logística avisa, tiendas consultan</div>
+          <div class="channel-desc">Avisos de reabastecimiento de prendas. Cuándo hay stock nuevo disponible, qué llegó, qué viene en camino.</div>
+          <div class="channel-example">Ej: "Llegaron 50 poleras negras S/M/L, disponibles desde hoy"</div>
+        </div>
+      </div>
+
+      <div class="channel">
+        <div class="channel-name">
+          <span class="hash">#</span>
+          <span class="emoji">📊</span>
+          <span class="name">stock-mangas-comics</span>
+        </div>
+        <div class="channel-info">
+          <div class="channel-who">¿Quién escribe? → Logística</div>
+          <div class="channel-desc">Stock específico de mangas y cómics. Consultas de disponibilidad de títulos.</div>
+        </div>
+      </div>
+
+      <div class="channel">
+        <div class="channel-name">
+          <span class="hash">#</span>
+          <span class="emoji">🎲</span>
+          <span class="name">stock-productos</span>
+        </div>
+        <div class="channel-info">
+          <div class="channel-who">¿Quién escribe? → Logística</div>
+          <div class="channel-desc">Stock general de otros productos (disquería, misceláneos, accesorios). Disponibilidad y movimientos.</div>
+        </div>
+      </div>
+
+      <div class="channel">
+        <div class="channel-name">
+          <span class="hash">#</span>
+          <span class="emoji">🏷️</span>
+          <span class="name">productos-bsale</span>
+        </div>
+        <div class="channel-info">
+          <div class="channel-who">¿Quién escribe? → Logística / Admin</div>
+          <div class="channel-desc">Novedades y cambios en productos del sistema Bsale. Productos nuevos, cambios de precio, actualizaciones en el catálogo.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PRODUCCIÓN -->
+  <div class="category">
+    <div class="category-header">
+      <span class="category-icon">🏭</span>
+      <span class="category-name">Producción</span>
+      <span class="category-desc">Equipo Producción + Diseño</span>
+    </div>
+    <div class="channels">
+
+      <div class="channel">
+        <div class="channel-name">
+          <span class="hash">#</span>
+          <span class="emoji">📢</span>
+          <span class="name">avisos-produccion</span>
+          <span class="tag tag-ro">Solo lectura</span>
+        </div>
+        <div class="channel-info">
+          <div class="channel-who">¿Quién escribe? → Jefe Producción</div>
+          <div class="channel-desc">Avisos oficiales del área de producción. Demoras, cambios de proceso, alertas de carga alta. Si hay demoras en pedidos, el equipo avisa acá.</div>
+          <div class="channel-example">Ej: "Alta demanda esta semana — pedidos web con 48h adicionales"</div>
+        </div>
+      </div>
+
+      <div class="channel">
+        <div class="channel-name">
+          <span class="hash">#</span>
+          <span class="emoji">💬</span>
+          <span class="name">consultas-diseno</span>
+        </div>
+        <div class="channel-info">
+          <div class="channel-who">¿Quién escribe? → Tiendas / Producción → Diseño responde</div>
+          <div class="channel-desc">Preguntas al equipo de diseño. ¿Existe un diseño? ¿Está disponible en X color? ¿Cuándo estará listo? Diseño responde por este canal.</div>
+          <div class="channel-example">Ej: "¿Hay diseño de Naruto en fondo negro disponible?"</div>
+        </div>
+      </div>
+
+      <div class="channel">
+        <div class="channel-name">
+          <span class="hash">#</span>
+          <span class="emoji">👕</span>
+          <span class="name">stock-prendas</span>
+        </div>
+        <div class="channel-info">
+          <div class="channel-who">¿Quién escribe? → Producción</div>
+          <div class="channel-desc">Stock de prendas base disponibles para estampar (poleras, camisas, etc.). Qué hay, en qué tallas y colores.</div>
+        </div>
+      </div>
+
+      <div class="channel">
+        <div class="channel-name">
+          <span class="hash">#</span>
+          <span class="emoji">🎨</span>
+          <span class="name">disenadores-privado</span>
+          <span class="tag tag-priv">Privado</span>
+        </div>
+        <div class="channel-info">
+          <div class="channel-who">¿Quién escribe? → Solo equipo de diseño</div>
+          <div class="channel-desc">Canal interno del equipo de diseño. Coordinación, feedback entre diseñadores, archivos de trabajo. Solo accede el equipo de diseño.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SOPORTE IT -->
+  <div class="category">
+    <div class="category-header">
+      <span class="category-icon">🛡️</span>
+      <span class="category-name">Soporte IT</span>
+      <span class="category-desc">Todo el equipo puede abrir tickets</span>
+    </div>
+    <div class="channels">
+
+      <div class="channel">
+        <div class="channel-name">
+          <span class="hash">#</span>
+          <span class="emoji">🆘</span>
+          <span class="name">urgencias</span>
+        </div>
+        <div class="channel-info">
+          <div class="channel-who">¿Quién escribe? → Cualquiera con problema urgente</div>
+          <div class="channel-desc">Problemas críticos que impiden trabajar AHORA. Bsale caído, impresora no funciona antes de abrir, sistema de pedidos sin respuesta. Solo para emergencias reales.</div>
+          <div class="channel-example">Ej: "Bsale no abre en portal lyon 18, no puedo cobrar" 🆘</div>
+        </div>
+      </div>
+
+      <div class="channel">
+        <div class="channel-name">
+          <span class="hash">#</span>
+          <span class="emoji">🤔</span>
+          <span class="name">consultas</span>
+        </div>
+        <div class="channel-info">
+          <div class="channel-who">¿Quién escribe? → Cualquiera con duda técnica</div>
+          <div class="channel-desc">Dudas que no son urgentes: cómo hacer algo en el sistema, dónde está tal función, error que aparece de vez en cuando. IT responde cuando puede.</div>
+          <div class="channel-example">Ej: "¿Cómo imprimo una boleta por separado en Bsale?"</div>
+        </div>
+      </div>
+
+      <div class="channel">
+        <div class="channel-name">
+          <span class="hash">#</span>
+          <span class="emoji">💾</span>
+          <span class="name">logs-servidor</span>
+          <span class="tag tag-priv">Solo IT</span>
+        </div>
+        <div class="channel-info">
+          <div class="channel-who">¿Quién escribe? → Bot automático</div>
+          <div class="channel-desc">Canal técnico. Registros automáticos del sistema. No necesitas leerlo a menos que seas del equipo IT.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PEDIDOS TIENDA -->
+  <div class="category">
+    <div class="category-header">
+      <span class="category-icon">👕</span>
+      <span class="category-name">Pedidos Tienda</span>
+      <span class="category-desc">Vendedores → Producción</span>
+    </div>
+    <div class="channels">
+
+      <div class="channel">
+        <div class="channel-name">
+          <span class="hash">#</span>
+          <span class="emoji">➕</span>
+          <span class="name">nueva-solicitud</span>
+          <span class="tag tag-forum">Canal Foro</span>
+        </div>
+        <div class="channel-info">
+          <div class="channel-who">¿Quién escribe? → Tiendas crean pedidos / Producción responde</div>
+          <div class="channel-desc">Acá se hacen los pedidos de estampado a Producción. Cada pedido es un hilo independiente con su propio estado. No mezcla pedidos de distintas tiendas.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- GUÍA PEDIDOS TIENDA -->
+<div class="guide">
+  <div class="guide-box">
+    <h2>📦 Cómo hacer un pedido en #nueva-solicitud</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Abre el canal Pedidos Tienda → nueva-solicitud</div>
+          <div class="step-detail">Verás todos los pedidos anteriores como hilos separados. Los tuyos aparecen con el nombre de tu local.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Haz clic en "Nueva publicación" (botón arriba a la derecha)</div>
+          <div class="step-detail">Esto abre un formulario nuevo — no contamina los otros pedidos.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Título: pon el nombre de tu local + prenda</div>
+          <div class="step-detail">Ejemplo: "Portal Lyon 18 — Polera Naruto negra"</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Cuerpo: usa esta plantilla y pega la imagen de referencia con Ctrl+V</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="template-box">
+      <div class="template-label">📋 Plantilla de pedido — copia y completa</div>
+      <pre>
+📦 PEDIDO TIENDA
+━━━━━━━━━━━━━━━━━━━━
+🏪 Local:
+👕 Prenda:
+🎨 Color:
+📐 Talla:
+⏰ Necesito para:
+📸 Referencia: (pega imagen aquí con Ctrl+V)
+💬 Comentarios:
+      </pre>
+    </div>
+
+    <div class="steps" style="margin-top: 14px;">
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-title">Agrega la etiqueta "🟡 Pendiente" y publica</div>
+          <div class="step-detail">Producción recibe tu pedido y cambiará la etiqueta a 🟠 En Proceso y luego 🟢 Listo cuando esté.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REGLAS -->
+<div class="rules">
+  <div class="rules-box">
+    <h2>⚡ Reglas del servidor</h2>
+    <ul class="rules-list">
+      <li>
+        <span class="num">01</span>
+        <span>Escribe en el canal que corresponde. Si es una urgencia IT, va a #urgencias — no a #apoyo-tiendas.</span>
+      </li>
+      <li>
+        <span class="num">02</span>
+        <span>Los pedidos de producción siempre en #nueva-solicitud. Nada de pedidos por #consultas-diseno ni mensajes directos.</span>
+      </li>
+      <li>
+        <span class="num">03</span>
+        <span>No uses @everyone ni @here salvo que seas de Dirección. Para mencionar a alguien, usa @nombre.</span>
+      </li>
+      <li>
+        <span class="num">04</span>
+        <span>Los canales de solo lectura son exactamente eso — si tienes dudas sobre un aviso, responde en el canal correspondiente.</span>
+      </li>
+      <li>
+        <span class="num">05</span>
+        <span>Dudas técnicas que no son urgentes van a #consultas, no a mensajes directos con IT.</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="footer">
+  <p>Manual Discord Cyco Records — v1.0 · Abril 2026<br>¿Algo que no está claro? Escribe en <strong>#apoyo-tiendas</strong></p>
+</div>
+
+</body>
+</html>
